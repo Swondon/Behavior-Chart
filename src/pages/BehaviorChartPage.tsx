@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import './BehaviorChartPage.css'; // Make sure this path is correct
+import './BehaviorChartPage.css';
 import { type Person, type BehaviorChart, behaviorLevels, type ClipRequest } from './charts';
 import ShareModal from '../components/ShareModal';
 import { db } from '../firebase';
@@ -19,6 +19,7 @@ function BehaviorChartPage() {
   const [chartDocId, setChartDocId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [pendingRequests, setPendingRequests] = useState<ClipRequest[]>([]);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [clipRequestInfo, setClipRequestInfo] = useState<{ person: Person, direction: 'up' | 'down' } | null>(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -27,6 +28,7 @@ function BehaviorChartPage() {
   const [personToDelete, setPersonToDelete] = useState<{ id: string, name: string } | null>(null);
   const [isDeleteChartModalOpen, setIsDeleteChartModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
+  const [newApprovalMode, setNewApprovalMode] = useState<'none' | 'any_user' | 'owner'>('none');
   const { user, setUser } = useAuth(); // Get the current authenticated user and setUser
   
   useEffect(() => {
@@ -45,6 +47,7 @@ function BehaviorChartPage() {
         const fetchedChart = chartDoc.data() as BehaviorChart;
         setChart(fetchedChart);
         setNewTitle(fetchedChart.name);
+        setNewApprovalMode(fetchedChart.approvalMode || 'none');
 
         // --- Logic to automatically add current user if not already in chart ---
         if (user && !fetchedChart.people.some(p => p.id === user.uid)) {
@@ -271,6 +274,28 @@ function BehaviorChartPage() {
 
   }, [chart, chartDocId, user]);
 
+  const handleSettingsUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chartDocId || !chart || !user || user.uid !== chart.ownerId) {
+      console.error("No permission to update settings.");
+      return;
+    }
+
+    const trimmedTitle = newTitle.trim();
+    if (!trimmedTitle) {
+      console.error("Chart name cannot be empty.");
+      return;
+    }
+
+    const chartRef = doc(db, "charts", chartDocId);
+    try {
+      await updateDoc(chartRef, { name: trimmedTitle, approvalMode: newApprovalMode });
+      setIsSettingsModalOpen(false);
+    } catch (error) {
+      console.error("Error updating chart settings:", error);
+    }
+  };
+
   const handleTitleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!chartDocId || !newTitle.trim() || newTitle.trim() === chart?.name) {
@@ -330,6 +355,43 @@ function BehaviorChartPage() {
           message={<>Are you sure you want to remove <strong>{personToDelete.name}</strong> from this chart?</>}
         />
       )}
+      {isSettingsModalOpen && chart && (
+        <div className="modal-overlay" onClick={() => setIsSettingsModalOpen(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={() => setIsSettingsModalOpen(false)}>×</button>
+            <h2>Chart Settings</h2>
+            <form onSubmit={handleSettingsUpdate} className="settings-form">
+              <div className="form-group">
+                <label htmlFor="chart-name">Chart Name</label>
+                <input
+                  id="chart-name"
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>Approval for Clipping</label>
+                <div className="radio-group">
+                  <label>
+                    <input type="radio" value="none" checked={newApprovalMode === 'none'} onChange={(e) => setNewApprovalMode(e.target.value as any)} />
+                    No one (immediate)
+                  </label>
+                  <label>
+                    <input type="radio" value="any_user" checked={newApprovalMode === 'any_user'} onChange={(e) => setNewApprovalMode(e.target.value as any)} />
+                    Anyone with access
+                  </label>
+                  <label>
+                    <input type="radio" value="owner" checked={newApprovalMode === 'owner'} onChange={(e) => setNewApprovalMode(e.target.value as any)} />
+                    Chart owner only
+                  </label>
+                </div>
+              </div>
+              <button type="submit" className="save-settings-button">Save Settings</button>
+            </form>
+          </div>
+        </div>
+      )}
       {isDeleteChartModalOpen && (
         <ConfirmModal
           isOpen={isDeleteChartModalOpen}
@@ -353,13 +415,15 @@ function BehaviorChartPage() {
               <button type="submit" className="save-title-button">Save</button>
             </form>
           ) : ( // Display title
-            <h1>{chart.name}</h1>
-          )}
-          {user && user.uid === chart.ownerId && !isEditingTitle && (
-            <button className="edit-title-button" onClick={() => setIsEditingTitle(true)}><PencilIcon /></button>
+            <h1>{chart.name}</h1> // The title is now edited via the settings modal
           )}
         </div>
         <div className="chart-actions">
+          {user && user.uid === chart.ownerId && (
+            <button className="settings-button" onClick={() => setIsSettingsModalOpen(true)}>
+              Settings
+            </button>
+          )}
           {user && user.uid === chart.ownerId && (
             <button className="delete-chart-button" onClick={() => setIsDeleteChartModalOpen(true)}>
               Delete Chart
