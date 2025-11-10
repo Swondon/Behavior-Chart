@@ -17,6 +17,12 @@
   gap: 1rem;
 }
 
+.chart-actions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0; /* Prevent this group from shrinking */
+}
+
 .title-container {
   display: flex;
   align-items: center;
@@ -70,6 +76,23 @@
 
 .edit-title-button:hover {
   transform: scale(1.2);
+}
+
+.delete-chart-button {
+  padding: 0.5rem 1.5rem;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: #F44336; /* Red color */
+  color: white;
+  border: 4px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.delete-chart-button:hover {
+  transform: scale(1.05);
 }
 
 .share-button {

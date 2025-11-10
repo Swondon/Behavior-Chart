@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://swondon.github.io/behavior-chart",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",

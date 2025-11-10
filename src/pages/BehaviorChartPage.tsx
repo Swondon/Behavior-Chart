@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import './BehaviorChartPage.css';
-import { type Person, type BehaviorChart, behaviorLevels, type ClipRequest, } from './charts';
+import './BehaviorChartPage.css'; // Make sure this path is correct
+import { type Person, type BehaviorChart, behaviorLevels, type ClipRequest } from './charts';
 import ShareModal from '../components/ShareModal';
 import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
-import { collection, query, where, doc, updateDoc, arrayUnion, onSnapshot, addDoc, serverTimestamp, writeBatch, arrayRemove } from 'firebase/firestore';
 import RequestClipModal from '../components/RequestClipModal'; // This path is correct
-import { useNotification } from '../context/NotificationContext';
+import { collection, query, where, doc, updateDoc, arrayUnion, onSnapshot, addDoc, serverTimestamp, writeBatch, arrayRemove } from 'firebase/firestore';
 import PendingRequests from '../components/PendingRequests';
 import ConfirmModal from '../components/ConfirmModal';
 import PencilIcon from '../components/PencilIcon';
@@ -26,10 +25,10 @@ function BehaviorChartPage() {
   const [editingPersonId, setEditingPersonId] = useState<string | null>(null);
   const [newPersonName, setNewPersonName] = useState('');
   const [personToDelete, setPersonToDelete] = useState<{ id: string, name: string } | null>(null);
+  const [isDeleteChartModalOpen, setIsDeleteChartModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const { user, setUser } = useAuth(); // Get the current authenticated user and setUser
-  const { addNotification } = useNotification();
-
+  
   useEffect(() => {
     if (!shareCode) return;
 
@@ -162,14 +161,14 @@ function BehaviorChartPage() {
 
     // Prevent non-owners from approving their own requests. The owner can approve anything.
     if (request.requesterId === user.uid && user.uid !== chart.ownerId) {
-      addNotification("You cannot approve your own request.", "error");
+      console.error("You cannot approve your own request.");
       return;
     }
 
     // 1. Update the person's level
     await handleLevelChange(request.targetPersonId, request.direction);
 
-    // 2. Update the request status
+    // 2. Update the request status (no notification needed here, as it's an internal action)
     const requestRef = doc(db, "clipRequests", requestId);
     await updateDoc(requestRef, { status: 'approved' });
   };
@@ -180,7 +179,7 @@ function BehaviorChartPage() {
 
     // Prevent non-owners from rejecting their own requests. The owner can reject anything.
     if (request.requesterId === user.uid && user.uid !== chart.ownerId) {
-      addNotification("You cannot reject your own request.", "error");
+      console.error("You cannot reject your own request.");
       return;
     }
 
@@ -207,10 +206,10 @@ function BehaviorChartPage() {
     const chartRef = doc(db, "charts", chartDocId);
     try {
       await updateDoc(chartRef, { people: updatedPeople });
-      addNotification("Person's name updated!", "success");
+      console.log("Person's name updated!");
     } catch (error) {
       console.error("Error updating person's name:", error);
-      addNotification("Failed to update name.", "error");
+      console.error("Failed to update name.");
     }
     setEditingPersonId(null);
   };
@@ -219,9 +218,9 @@ function BehaviorChartPage() {
     if (!personToDelete) return;
     const { id: personId, name: personName } = personToDelete;
     if (!chart || !chartDocId || !user) return;
-
-    if (personId === chart.ownerId) {
-      addNotification("The chart owner cannot be removed.", "error");
+    
+    if (personId === chart.ownerId) { // The chart owner cannot be removed.
+      console.error("The chart owner cannot be removed.");
       return;
     }
     
@@ -236,13 +235,41 @@ function BehaviorChartPage() {
       });
 
       await batch.commit();
-      addNotification(`${personName} has been removed from the chart.`, "success");
+      console.log(`${personName} has been removed from the chart.`); // Person has been removed from the chart.
     } catch (error) {
       console.error("Error removing person:", error);
-      addNotification("Failed to remove person.", "error");
+      console.error("Failed to remove person."); // Failed to remove person.
     }
     setPersonToDelete(null);
   };
+
+  const handleDeleteChart = useCallback(async () => {
+    if (chart && chartDocId && user && user.uid === chart.ownerId) {
+      try {
+        const batch = writeBatch(db);
+
+        // 1. Delete the chart document
+        const chartRef = doc(db, "charts", chartDocId);
+        batch.delete(chartRef);
+
+        // // 2. Remove the chart's shareCode from all members' joinedCharts
+        // for (const person of chart.people) {
+        //   const userRef = doc(db, "users", person.id);
+        //   batch.update(userRef, { joinedCharts: arrayRemove(chart.shareCode) });
+        // }
+        await batch.commit();
+        console.log(`Chart "${chart.name}" deleted successfully.`);
+        // Redirect to charts list page after deletion
+        return <Navigate to="/charts" replace />;
+      } catch (error) {
+        console.error("Error deleting chart:", error);
+        console.error("Failed to delete chart."); // Failed to delete chart.
+      }
+    } else {
+      console.error("You don't have permission to delete this chart."); // You don't have permission to delete this chart.
+    }
+
+  }, [chart, chartDocId, user]);
 
   const handleTitleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,10 +282,10 @@ function BehaviorChartPage() {
     const chartRef = doc(db, "charts", chartDocId);
     try {
       await updateDoc(chartRef, { name: newTitle.trim() });
-      addNotification("Chart title updated!", "success");
+      console.log("Chart title updated!");
     } catch (error) {
       console.error("Error updating chart title:", error);
-      addNotification("Failed to update title.", "error");
+      console.error("Failed to update title.");
     }
     setIsEditingTitle(false);
   };
@@ -275,9 +302,8 @@ function BehaviorChartPage() {
 
   if (!chart) {
     // If the chart is null after loading, it means it was not found or the user has no access.
-    // We can add a notification here before redirecting.
     if (!loading) {
-      addNotification("Chart not found or you have been removed from it.", "error");
+      console.error("Chart not found or you have been removed from it.");
     }
     return <Navigate to="/charts" replace />;
   }
@@ -304,10 +330,20 @@ function BehaviorChartPage() {
           message={<>Are you sure you want to remove <strong>{personToDelete.name}</strong> from this chart?</>}
         />
       )}
+      {isDeleteChartModalOpen && (
+        <ConfirmModal
+          isOpen={isDeleteChartModalOpen}
+          onClose={() => setIsDeleteChartModalOpen(false)}
+          onConfirm={() => {handleDeleteChart(); setIsDeleteChartModalOpen(false)}}
+          title="Delete Chart"
+          message={<>Are you sure you want to delete the chart "<strong>{chart.name}</strong>"? This action cannot be undone.</>}
+        />
+      )}
       <div className="chart-header">
         <div className="title-container">
           {isEditingTitle ? (
             <form onSubmit={handleTitleUpdate} className="title-edit-form">
+              {/* Input for editing title */}
               <input
                 type="text"
                 value={newTitle}
@@ -316,16 +352,23 @@ function BehaviorChartPage() {
               />
               <button type="submit" className="save-title-button">Save</button>
             </form>
-          ) : (
+          ) : ( // Display title
             <h1>{chart.name}</h1>
           )}
           {user && user.uid === chart.ownerId && !isEditingTitle && (
             <button className="edit-title-button" onClick={() => setIsEditingTitle(true)}><PencilIcon /></button>
           )}
         </div>
-        <button className="share-button" onClick={() => setIsShareModalOpen(true)}>
-          Share
-        </button>
+        <div className="chart-actions">
+          {user && user.uid === chart.ownerId && (
+            <button className="delete-chart-button" onClick={() => setIsDeleteChartModalOpen(true)}>
+              Delete Chart
+            </button>
+          )}
+          <button className="share-button" onClick={() => setIsShareModalOpen(true)}>
+            Share
+          </button>
+        </div>
       </div>
 
       <PendingRequests requests={approvableRequests} chart={chart} onApprove={handleApproveRequest} onReject={handleRejectRequest} />
