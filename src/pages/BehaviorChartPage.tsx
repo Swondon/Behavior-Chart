@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Navigate, Link, useNavigate } from 'react-router-dom';
+import { useParams, Navigate, Link } from 'react-router-dom';
 import './BehaviorChartPage.css';
 import { type Person, type BehaviorChart, behaviorLevels, type ClipRequest, } from './charts';
 import ShareModal from '../components/ShareModal';
 import { db } from '../firebase';
-import { useAuth, type User as AuthUser } from '../context/AuthContext';
-import { collection, query, where, doc, updateDoc, arrayUnion, onSnapshot, addDoc, serverTimestamp, getDocs, writeBatch, arrayRemove } from 'firebase/firestore';
+import { useAuth } from '../context/AuthContext';
+import { collection, query, where, doc, updateDoc, arrayUnion, onSnapshot, addDoc, serverTimestamp, writeBatch, arrayRemove } from 'firebase/firestore';
 import RequestClipModal from '../components/RequestClipModal'; // This path is correct
 import { useNotification } from '../context/NotificationContext';
 import PendingRequests from '../components/PendingRequests';
@@ -29,7 +29,6 @@ function BehaviorChartPage() {
   const [newTitle, setNewTitle] = useState('');
   const { user, setUser } = useAuth(); // Get the current authenticated user and setUser
   const { addNotification } = useNotification();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!shareCode) return;
@@ -201,7 +200,7 @@ function BehaviorChartPage() {
       return;
     }
 
-    const updatedPeople = chart.people.map(p =>
+    const updatedPeople = chart!.people.map(p =>
       p.id === personId ? { ...p, name: newPersonName.trim() } : p
     );
 

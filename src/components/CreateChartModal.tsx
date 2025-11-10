@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, doc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '../firebase';
-import { useAuth, type User as AuthUser } from '../context/AuthContext';
+import { useAuth} from '../context/AuthContext';
 import { type BehaviorChart, type Person } from '../pages/charts';
 import './CreateChartModal.css';
 

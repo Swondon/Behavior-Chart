@@ -1,4 +1,3 @@
-import React from 'react';
 import { type ClipRequest, type BehaviorChart } from '../pages/charts';
 import { useAuth } from '../context/AuthContext';
 import './PendingRequests.css';
