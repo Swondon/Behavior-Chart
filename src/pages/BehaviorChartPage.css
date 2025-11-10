@@ -1,0 +1,365 @@
+.back-to-charts-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: #555;
+  text-decoration: none;
+  font-weight: 900;
+  transition: color 0.2s;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-grow: 1;
+}
+
+.title-edit-form {
+  flex-grow: 1;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.title-edit-form input {
+  width: 100%;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 2em; /* Match the default h1 font-size */
+  font-weight: 900;
+  border: 4px dashed #ccc;
+  border-radius: 12px;
+  padding: 0.25rem 0.5rem;
+  line-height: 1.2; /* Adjust for better vertical alignment */
+}
+
+.save-title-button {
+  padding: 0.5rem 1.5rem;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: #1e90ff;
+  color: white;
+  border: 4px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.edit-title-button {
+  background: #fff;
+  border: 3px solid #555;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  transition: transform 0.2s;
+}
+
+.edit-title-button:hover {
+  transform: scale(1.2);
+}
+
+.share-button {
+  padding: 0.5rem 1.5rem;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: #fff;
+  border: 4px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.visual-chart {
+  display: flex;
+  flex-direction: column;
+  border: 4px solid #333;
+  border-radius: 15px;
+  overflow: hidden; /* Ensures the border-radius is applied to children */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: rotate(-0.5deg); /* Give the whole chart a slight tilt */
+}
+
+.level-row {
+  padding: 1rem;
+  border-bottom: 4px solid #333;
+  display: flex;
+  flex-direction: column; /* Stack level name and clips vertically on mobile */
+  align-items: flex-start;
+  gap: 1rem; /* Space between level name and clips */
+}
+
+.visual-chart .level-row:last-child {
+  border-bottom: none;
+}
+
+.level-name {
+  font-size: 1.25rem; /* Slightly smaller font for mobile */
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 900; /* Bolder font for level names */
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.people-in-level {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Make the container for people take up the full width */
+  gap: 1rem;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fly-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fly-out-up {
+  to {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+}
+
+@keyframes fly-out-down {
+  to {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+}
+
+.person-clip {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 0.75rem 1rem;
+  border-radius: 12px; /* Make the corners more rounded */
+  border: 4px solid #333;
+  display: flex; /* Make clip a flex container */
+  flex-direction: row; /* Arrange items side-by-side */
+  justify-content: space-between; /* Push info and buttons to opposite ends */
+  align-items: center; /* Vertically center the content */
+  gap: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  animation: fly-in 0.3s ease-out;
+}
+
+.person-clip.animating-out-up {
+  animation: fly-out-up 0.2s ease-in forwards;
+}
+
+.person-clip.animating-out-down {
+  animation: fly-out-down 0.2s ease-in forwards;
+}
+
+.person-clip:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.person-clip:nth-child(odd) {
+  transform: rotate(-1.5deg);
+}
+
+.person-clip:nth-child(even) {
+  transform: rotate(1.5deg);
+}
+
+.person-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.person-name {
+  font-weight: 900;
+  font-size: 1.4rem; /* Make name bigger */
+  color: #333;
+}
+
+.person-username {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: -10px; /* Pull username closer to the name */
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically on mobile */
+  gap: 0.5rem;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.owner-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.person-edit-btn, .person-delete-btn {
+  background: #fff;
+  border: 3px solid #555;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+.person-edit-btn svg, .person-delete-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.person-edit-btn:hover {
+  transform: scale(1.1);
+  color: #1e90ff;
+  background-color: #e3f2fd;
+  border-color: #1e90ff;
+}
+
+.person-delete-btn:hover {
+  transform: scale(1.1);
+  color: #F44336;
+  background-color: #ffebee;
+  border-color: #F44336;
+}
+
+.person-edit-btn:disabled, .person-delete-btn:disabled {
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+  border-color: #9e9e9e;
+  color: #9e9e9e;
+  transform: none;
+}
+
+.person-edit-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.person-edit-form input {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 0.1rem 0.4rem;
+  width: 100%;
+}
+
+.save-person-button {
+  background: #fff;
+  border: 3px solid #555;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+.save-person-button:hover {
+  transform: scale(1.1);
+  color: #4CAF50;
+  background-color: #e8f5e9;
+  border-color: #4CAF50;
+}
+
+.save-person-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.button-group button {
+  padding: 0.5rem 0.25rem; /* Add padding to make buttons taller */
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.button-group button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.clip-up-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: 4px solid #333;
+}
+
+.clip-up-btn:hover:not(:disabled) {
+  background-color: #5cb85c;
+}
+
+.clip-down-btn {
+  background-color: #F44336; /* Red */
+  color: white;
+  border: 4px solid #333;
+}
+
+.clip-down-btn:hover:not(:disabled) {
+  background-color: #d9534f;
+}
+
+/* --- Media Query for Tablets and Desktops --- */
+@media (min-width: 768px) {
+  .level-row {
+    flex-direction: row; /* Side-by-side layout for larger screens */
+    align-items: center;
+    min-height: 80px;
+    padding: 1rem 1.5rem;
+  }
+
+  .level-name {
+    flex-basis: 220px; /* Give the level name a fixed width */
+    flex-shrink: 0;
+    font-size: 1.75rem;
+  }
+
+  .person-clip {
+    border-radius: 30px; /* Restore pill shape on desktop */
+    padding: 0.5rem 1.25rem;
+  }
+
+  .button-group {
+    flex-direction: row; /* Buttons side-by-side on desktop */
+    gap: 0.5rem;
+  }
+
+  .people-in-level {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

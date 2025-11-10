@@ -1,0 +1,101 @@
+.list-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.list-page-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.create-button {
+  padding: 0.5rem 1.5rem;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: #1e90ff; /* Good Choices Blue */
+  color: white;
+  border: 4px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 4px 4px 0px #ddd;
+}
+
+.join-button {
+  padding: 0.5rem 1.5rem;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  background-color: #4CAF50; /* Clip Up Green */
+  color: white;
+  border: 4px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 4px 4px 0px #ddd;
+}
+
+.chart-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: #fff;
+  border: 4px solid #000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chart-list-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.create-button:hover {
+  background-color: #4ca1ff;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.join-button:hover {
+  background-color: #5cb85c;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.no-charts-container {
+  text-align: center;
+  padding: 3rem 2rem;
+  margin-top: 3rem;
+  border: 4px dashed #ccc;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.no-charts-container h2 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  color: #333;
+}
+
+.no-charts-container p {
+  font-size: 1.3rem;
+  color: #555;
+  margin-bottom: 2rem;
+}

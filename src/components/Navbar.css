@@ -1,0 +1,177 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fdfdfd;
+  padding: 1rem 1.5rem;
+  color: white;
+  border-bottom: 4px solid #000;
+  position: relative;
+}
+
+.nav-brand {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #333;
+  text-decoration: none;
+  z-index: 100; /* Keep brand below the open menu */
+}
+
+.hamburger-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;  
+  z-index: 102; /* Ensure hamburger is always on top */
+}
+
+.hamburger-line {
+  width: 2.5rem;
+  height: 0.3rem;
+  background: #333;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* --- Hamburger to "X" Animation --- */
+.hamburger-menu.open .hamburger-line {
+  background: #F44336; /* Red */
+}
+
+.hamburger-menu.open .hamburger-line:nth-child(1) {
+  transform: translateY(0.8rem) rotate(45deg);
+}
+
+.hamburger-menu.open .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.hamburger-menu.open .hamburger-line:nth-child(3) {
+  transform: translateY(-0.8rem) rotate(-45deg);
+}
+
+.hamburger-menu.open:hover .hamburger-line {
+  background: #d9534f; /* Darker Red on hover */
+}
+
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  background: #f4f4f4;
+  border-left: 4px solid #000;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 70%;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 101; /* Position menu above brand and below hamburger */
+}
+
+.nav-links.open {
+  transform: translateX(0);
+}
+
+.nav-links a {
+  color: #333;
+  text-decoration: none;
+  font-size: 2rem;
+  font-weight: 900;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #FF69B4; /* Super Student Pink */
+}
+
+.nav-links a.active {
+  color: #FF69B4;
+}
+
+.nav-auth-section {
+  margin-top: 2rem;
+}
+
+.login-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #1e90ff;
+  color: white !important;
+  border: 4px solid #000;
+  border-radius: 12px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.5rem;
+  display: inline-block; /* Ensures padding is applied correctly to the NavLink */
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 4px solid #000;
+}
+
+.logout-button {
+  padding: 0.75rem 1.5rem;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background-color: #F44336;
+  color: white;
+  border: 4px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* --- Media Query for Tablets and Desktops --- */
+@media (min-width: 768px) {
+  .navbar {
+    padding: 0.5rem 2rem;
+  }
+
+  .hamburger-menu {
+    display: none;
+  }
+
+  .nav-links {
+    position: static;
+    flex-direction: row;
+    height: auto;
+    width: auto;
+    background: transparent;
+    border: none;
+    transform: translateX(0);
+    gap: 1.5rem;
+  }
+
+  .nav-links a {
+    font-size: 1.5rem;
+  }
+
+  .nav-auth-section {
+    margin-top: 0;
+    margin-left: auto; /* Pushes auth section to the far right */
+  }
+
+  .logout-button, .login-button {
+    font-size: 1.2rem;
+  }
+}

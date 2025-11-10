@@ -1,0 +1,102 @@
+.pending-requests-container {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #fff8e1;
+  border: 4px solid #fdd835;
+  border-radius: 12px;
+}
+
+.pending-requests-container h3 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #333;
+  border-bottom: 2px solid #fdd835;
+  padding-bottom: 0.5rem;
+}
+
+.pending-request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  flex-direction: column;
+  border-bottom: 1px solid #eee;
+  gap: 1rem;
+}
+
+.pending-request-item:last-child {
+  border-bottom: none;
+}
+
+.request-info {
+  width: 100%;
+  text-align: center;
+}
+
+.request-info p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.request-reason {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.25rem !important;
+}
+
+.clip-up-text {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.clip-down-text {
+  color: #F44336;
+  font-weight: bold;
+}
+
+.request-actions {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.request-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 4px solid #000;
+  cursor: pointer;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  transition: transform 0.2s;
+  flex-grow: 1;
+}
+
+.request-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.approve-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.reject-btn {
+  background-color: #F44336;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .pending-request-item {
+    flex-direction: row;
+  }
+
+  .request-info {
+    width: auto;
+    text-align: left;
+  }
+
+  .request-actions {
+    width: auto;
+  }
+}
