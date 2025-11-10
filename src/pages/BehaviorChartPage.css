@@ -19,8 +19,9 @@
 
 .chart-actions {
   display: flex;
+  flex-direction: column; /* Stack buttons on mobile */
+  width: 100%; /* Take full width on mobile */
   gap: 1rem;
-  flex-shrink: 0; /* Prevent this group from shrinking */
 }
 
 .title-container {
@@ -85,8 +86,9 @@
   font-weight: 900;
   background-color: #1e90ff; /* Dodger Blue */
   color: white;
-  border: 4px solid #000;
+  border: 4px solid #333; /* Match chart border */
   border-radius: 12px;
+  transform: rotate(-0.5deg); /* Less askew */
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -98,7 +100,8 @@
   font-weight: 900;
   background-color: #F44336; /* Red color */
   color: white;
-  border: 4px solid #000;
+  border: 4px solid #333; /* Match chart border */
+  transform: rotate(0.5deg); /* Less askew */
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.2s;
@@ -115,7 +118,8 @@
   font-size: 1.2rem;
   font-weight: 900;
   background-color: #fff;
-  border: 4px solid #000;
+  transform: rotate(-0.5deg); /* Less askew */
+  border: 4px solid #333;
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.2s;
@@ -456,5 +460,11 @@
   .people-in-level {
     flex-direction: row;
     flex-wrap: wrap;
+  }
+
+  .chart-actions {
+    flex-direction: row; /* Revert to row on larger screens */
+    width: auto; /* Revert to auto width */
+    flex-shrink: 0; /* Prevent shrinking on larger screens */
   }
 }

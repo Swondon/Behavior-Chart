@@ -28,7 +28,7 @@ function BehaviorChartPage() {
   const [personToDelete, setPersonToDelete] = useState<{ id: string, name: string } | null>(null);
   const [isDeleteChartModalOpen, setIsDeleteChartModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
-  const [newApprovalMode, setNewApprovalMode] = useState<'none' | 'any_user' | 'owner'>('none');
+  const [newApprovalMode, setNewApprovalMode] = useState<'none' | 'user' | 'any_user' | 'owner'>('none');
   const { user, setUser } = useAuth(); // Get the current authenticated user and setUser
   
   useEffect(() => {
